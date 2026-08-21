@@ -6,6 +6,7 @@ on:
 
 permissions:
   contents: write
+  id-token: write # OIDC — lets npm verify this run via Trusted Publishing
 
 jobs:
   publish-npm:
@@ -17,9 +18,10 @@ jobs:
         with:
           bun-version: latest
 
+      # npm >= 11.5 is required for Trusted Publishing (OIDC)
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           registry-url: https://registry.npmjs.org/
 
       - name: Verify tag matches package.json version
@@ -40,10 +42,8 @@ jobs:
       - name: Build
         run: bun run build
 
-      - name: Publish to npm
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish to npm (Trusted Publishing)
+        run: npm publish --provenance
 
   build-binaries:
     runs-on: ubuntu-latest

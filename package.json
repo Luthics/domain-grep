@@ -1,6 +1,10 @@
 {
-  "name": "domain-grep",
+  "name": "@luthics/domain-grep",
   "version": "1.0.0",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "description": "Find available domains by keyword with prefix/suffix combinations — RDAP + WHOIS, no API key, pluggable providers",
   "type": "module",
   "bin": {

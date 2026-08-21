@@ -2,4 +2,7 @@ node_modules/
 .DS_Store
 *.log
 results/
-domain-finder
+release-bin/
+dist/
+domain-grep
+domain-grep.exe

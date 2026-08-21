@@ -1,32 +1,41 @@
 {
-  "name": "domain-finder",
-  "version": "2.0.0",
-  "description": "Find available domains by keyword with prefix/suffix combinations, powered by RDAP",
+  "name": "domain-grep",
+  "version": "1.0.0",
+  "description": "Find available domains by keyword with prefix/suffix combinations — RDAP + WHOIS, no API key, pluggable providers",
   "type": "module",
-  "main": "index.ts",
   "bin": {
-    "domain-finder": "./index.ts"
+    "domain-grep": "./dist/index.js"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "start": "bun index.ts",
-    "compile": "bun build --compile index.ts --outfile domain-finder",
-    "typecheck": "tsc --noEmit"
+    "build": "bun build index.ts --outdir dist --target node && chmod +x dist/index.js",
+    "compile": "bun build --compile index.ts --outfile domain-grep",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "bun run typecheck && bun run build"
   },
   "engines": {
-    "bun": ">=1.0.0"
+    "node": ">=18.17"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Luthics/domain-grep.git"
+  },
+  "homepage": "https://github.com/Luthics/domain-grep#readme",
+  "bugs": {
+    "url": "https://github.com/Luthics/domain-grep/issues"
   },
   "keywords": [
     "domain",
     "domain-availability",
+    "domain-checker",
     "rdap",
     "whois",
     "cli",
-    "domain-finder"
+    "bun"
   ],
   "author": "Luthics",
-  "license": "MIT",
-  "devDependencies": {
-    "@types/bun": "^1.4.0",
-    "typescript": "^7.0.2"
-  }
+  "license": "MIT"
 }

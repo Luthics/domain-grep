@@ -1,4 +1,6 @@
+import { connect } from 'node:net'
 import type { DomainProvider, ProviderCheck } from '../types'
+import { sleep } from '../sleep'
 
 const TIMEOUT_MS = 10_000
 const MAX_RETRIES = 4
@@ -53,7 +55,7 @@ async function queryWithRetry(query: string, attempt = 0): Promise<string> {
   const server = SERVERS[tldOf(query)]
   const text = await whoisQuery(server, query)
   if (RATE_LIMITED.test(text) && attempt < MAX_RETRIES) {
-    await Bun.sleep(1500 * (attempt + 1))
+    await sleep(1500 * (attempt + 1))
     return queryWithRetry(query, attempt + 1)
   }
   return text
@@ -76,25 +78,17 @@ function whoisQuery(server: string, query: string): Promise<string> {
         settle()
       }
     }
-    const timeout = AbortSignal.timeout(TIMEOUT_MS)
-    timeout.addEventListener('abort', () => finish(() => reject(new Error('whois timeout'))))
-    Bun.connect({
-      hostname: server,
-      port: 43,
-      socket: {
-        data(_socket, chunk) {
-          out += chunk
-        },
-        end() {
-          finish(() => resolve(out))
-        },
-        error(_socket, error) {
-          finish(() => reject(error instanceof Error ? error : new Error(String(error))))
-        },
-      },
+    const socket = connect({ host: server, port: 43 }, () => socket.write(query))
+    socket.setTimeout(TIMEOUT_MS)
+    socket.on('data', (chunk) => {
+      out += chunk.toString()
     })
-      .then((socket) => socket.write(query))
-      .catch((error) => finish(() => reject(error)))
+    socket.on('end', () => finish(() => resolve(out)))
+    socket.on('timeout', () => {
+      socket.destroy()
+      finish(() => reject(new Error('whois timeout')))
+    })
+    socket.on('error', (err) => finish(() => reject(err)))
   })
 }
 

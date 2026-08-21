@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/usr/bin/env node
 import { PROVIDERS, route } from './src/providers'
 import { printReport, saveReport, summarize } from './src/report'
 import { schedule } from './src/scheduler'
@@ -105,7 +105,7 @@ function printProviders(): void {
 async function main() {
   let opts: CliOptions
   try {
-    opts = parseArgs(Bun.argv.slice(2))
+    opts = parseArgs(process.argv.slice(2))
   } catch (err) {
     console.error(`${err instanceof Error ? err.message : err}\n`)
     console.log(USAGE)
@@ -166,7 +166,7 @@ async function main() {
   printReport(results, { showAll: opts.showAll })
 
   if (opts.out) {
-    saveReport(results, opts.out)
+    await saveReport(results, opts.out)
     console.log(`💾 saved to ${opts.out}`)
   }
 

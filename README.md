@@ -1,41 +1,46 @@
-# domain-finder
+# domain-grep
 
 Find available domains by keyword with prefix/suffix combinations — powered by RDAP and WHOIS, no API key required.
 
-Built for [Bun](https://bun.sh). Zero runtime dependencies.
+Runs on **Node.js ≥ 18** and **Bun** alike. Zero runtime dependencies.
 
 ## Install
 
-Requires Bun ≥ 1.0. No dependencies to install:
-
 ```bash
-bun install        # optional, installs dev tooling only
+# global install (npm or bun)
+npm i -g domain-grep
+
+# or run without installing
+npx domain-grep myapp
+bunx domain-grep myapp
+
+# or build from source
+bun install && bun run build && node dist/index.js --help
 ```
 
-Or build a standalone binary (~57 MB, no Bun needed to run):
+Prefer a single self-contained binary (~57 MB, no runtime needed)? Grab one from [Releases](https://github.com/Luthics/domain-grep/releases) or build it:
 
 ```bash
 bun run compile
-./domain-finder --help
 ```
 
 ## Usage
 
 ```bash
-bun index.ts <keyword>... [options]
+domain-grep <keyword>... [options]
 ```
 
 ### Examples
 
 ```bash
 # Check "myapp" across the default TLDs (com net org io ai dev app co)
-bun index.ts myapp
+domain-grep myapp
 
 # Cartesian product: myphoto / getphoto / photohq / getphotolab …
-bun index.ts photo --tlds com,io,ai --prefixes my,get --suffixes hq,lab
+domain-grep photo --tlds com,io,ai --prefixes my,get --suffixes hq,lab
 
 # Multiple keywords at once, list registered domains too, save as JSON
-bun index.ts blog news --tlds com,dev --all --out results.json
+domain-grep blog news --tlds com,dev --all --out results.json
 ```
 
 ### Options

@@ -1,5 +1,6 @@
 import { mapPool } from './pool'
 import { route } from './providers'
+import { sleep } from './sleep'
 import type { CheckResult, DomainProvider } from './types'
 
 export interface ScheduleOptions {
@@ -50,7 +51,7 @@ async function runLane(
   return mapPool(domains, concurrency, async (domain): Promise<CheckResult> => {
     if (provider.minIntervalMs) {
       const wait = provider.minIntervalMs - (Date.now() - lastRequestAt)
-      if (wait > 0) await Bun.sleep(wait)
+      if (wait > 0) await sleep(wait)
       lastRequestAt = Date.now()
     }
     const check = await provider.check(domain)

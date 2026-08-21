@@ -1,4 +1,5 @@
 import type { DomainProvider, ProviderCheck } from '../types'
+import { sleep } from '../sleep'
 
 const TIMEOUT_MS = 10_000
 const MAX_RETRIES = 2
@@ -90,7 +91,7 @@ async function request(url: string, attempt = 0): Promise<Response> {
   })
   // Back off on rate limiting / transient registry errors.
   if ((res.status === 429 || res.status >= 500) && attempt < MAX_RETRIES) {
-    await Bun.sleep(600 * 2 ** attempt)
+    await sleep(600 * 2 ** attempt)
     return request(url, attempt + 1)
   }
   return res

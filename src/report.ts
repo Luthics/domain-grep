@@ -1,3 +1,4 @@
+import { writeFile } from 'node:fs/promises'
 import type { Availability, CheckResult } from './types'
 
 const green = (s: string) => `\x1b[32m${s}\x1b[0m`
@@ -63,7 +64,7 @@ export function summarize(results: CheckResult[]): ReportSummary {
 }
 
 /** Write results to a file. `.json` gets structured output, anything else plain text. */
-export function saveReport(results: CheckResult[], file: string): void {
+export async function saveReport(results: CheckResult[], file: string): Promise<void> {
   const sorted = [...results].sort((a, b) => a.domain.localeCompare(b.domain))
   const body = file.endsWith('.json')
     ? JSON.stringify({ checkedAt: new Date().toISOString(), summary: summarize(results), results: sorted }, null, 2)
@@ -78,5 +79,5 @@ export function saveReport(results: CheckResult[], file: string): void {
           ].join('\n'),
         )
         .join('\n')
-  Bun.write(file, body)
+  await writeFile(file, body)
 }

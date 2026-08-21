@@ -8,11 +8,11 @@ Runs on **Node.js ≥ 18** and **Bun** alike. Zero runtime dependencies.
 
 ```bash
 # global install (npm or bun)
-npm i -g domain-grep
+npm i -g @luthics/domain-grep
 
 # or run without installing
-npx domain-grep myapp
-bunx domain-grep myapp
+npx @luthics/domain-grep myapp
+bunx @luthics/domain-grep myapp
 
 # or build from source
 bun install && bun run build && node dist/index.js --help

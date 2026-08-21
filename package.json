@@ -41,5 +41,9 @@
     "bun"
   ],
   "author": "Luthics",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@types/bun": "^1.4.0",
+    "typescript": "^7.0.2"
+  }
 }

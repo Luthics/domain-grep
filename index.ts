@@ -131,6 +131,12 @@ async function main() {
   }
 
   const variants = generateVariants(opts)
+  if (variants.length === 0) {
+    console.error(
+      'error: no candidates to check — --no-original without any prefixes/suffixes leaves an empty list',
+    )
+    process.exit(1)
+  }
   const domains = toDomains(variants, opts.tlds)
 
   console.log(`🔎 keywords : ${opts.words.join(', ')}`)
